@@ -35,12 +35,18 @@ namespace WorkTrace.Agent.Services
             _telemetrySender = new TelemetrySender(_authService);
         }
 
-        public void Start()
+        public async Task StartAsync()
         {
             if (!_authService.IsConfigured())
             {
-                // In headless mode, we can only log to file or console
                 File.AppendAllText("agent.log", $"[{DateTime.Now}] Cannot start tracking: Agent Token is not configured in appsettings.json\n");
+                return;
+            }
+
+            bool isEnrolled = await _authService.EnrollDeviceAsync();
+            if (!isEnrolled)
+            {
+                File.AppendAllText("agent.log", $"[{DateTime.Now}] Cannot start tracking: Device enrollment failed.\n");
                 return;
             }
 

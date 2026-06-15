@@ -7,10 +7,10 @@ namespace WorkTrace.Agent
     {
         private TrackingEngine? _trackingEngine;
 
-        private void Application_Startup(object sender, StartupEventArgs e)
+        private async void Application_Startup(object sender, StartupEventArgs e)
         {
             _trackingEngine = new TrackingEngine();
-            _trackingEngine.Start();
+            await _trackingEngine.StartAsync();
         }
 
         private void Application_Exit(object sender, ExitEventArgs e)
