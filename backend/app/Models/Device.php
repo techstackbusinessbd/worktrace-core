@@ -16,6 +16,7 @@ class Device extends Model
         'tenant_id',
         'mac_address',
         'hostname',
+        'domain_user',
         'user_id',
         'is_active',
     ];

@@ -15,7 +15,8 @@ class AgentEnrollmentController extends Controller
         $request->validate([
             'enrollment_token' => 'required|string',
             'mac_address' => 'required|string',
-            'hostname' => 'nullable|string'
+            'hostname' => 'nullable|string',
+            'domain_user' => 'nullable|string'
         ]);
 
         $tenant = Tenant::where('enrollment_token', $request->enrollment_token)->first();
@@ -44,8 +45,17 @@ class AgentEnrollmentController extends Controller
             ],
             [
                 'hostname' => $request->hostname,
+                'domain_user' => $request->domain_user,
             ]
         );
+        
+        // Update the hostname/domain_user if they changed for an existing device
+        if (!$device->wasRecentlyCreated && ($device->hostname !== $request->hostname || $device->domain_user !== $request->domain_user)) {
+            $device->update([
+                'hostname' => $request->hostname ?? $device->hostname,
+                'domain_user' => $request->domain_user ?? $device->domain_user,
+            ]);
+        }
 
         // Generate Sanctum Device Token
         $token = $device->createToken('agent-device-token')->plainTextToken;

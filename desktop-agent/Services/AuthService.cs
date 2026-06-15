@@ -72,7 +72,8 @@ namespace WorkTrace.Agent.Services
                 {
                     enrollment_token = _enrollmentToken,
                     mac_address = GetMacAddress(),
-                    hostname = Environment.MachineName
+                    hostname = Environment.MachineName,
+                    domain_user = Environment.UserDomainName + "\\" + Environment.UserName
                 };
 
                 var content = new System.Net.Http.StringContent(JsonSerializer.Serialize(payload), System.Text.Encoding.UTF8, "application/json");

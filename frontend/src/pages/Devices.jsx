@@ -203,6 +203,7 @@ const Devices = () => {
                     />
                   </th>
                   <th style={{ padding: '12px 16px', fontWeight: '600' }}>Hostname</th>
+                  <th style={{ padding: '12px 16px', fontWeight: '600' }}>Domain User</th>
                   <th style={{ padding: '12px 16px', fontWeight: '600' }}>MAC Address</th>
                   <th style={{ padding: '12px 16px', fontWeight: '600' }}>Status</th>
                   <th style={{ padding: '12px 16px', fontWeight: '600' }}>Assigned Employee</th>
@@ -225,6 +226,9 @@ const Devices = () => {
                         <Monitor size={16} color="var(--md-sys-color-on-surface-variant)" />
                         {device.hostname || 'Unknown-PC'}
                       </div>
+                    </td>
+                    <td style={{ padding: '16px', color: 'var(--md-sys-color-on-surface-variant)' }}>
+                      {device.domain_user || '-'}
                     </td>
                     <td style={{ padding: '16px', fontFamily: 'monospace', color: 'var(--md-sys-color-on-surface-variant)' }}>
                       {device.mac_address}
