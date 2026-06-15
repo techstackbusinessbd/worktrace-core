@@ -6,7 +6,7 @@ namespace WorkTrace.Agent.Services
 {
     public class AuthService
     {
-        public string BaseUrl { get; private set; } = "http://localhost:8000/api/v1";
+        public string BaseUrl { get; private set; } = "https://worktraceapi-0yag.onrender.com/api/v1";
         private string? _authToken;
 
         public AuthService()
