@@ -1,0 +1,56 @@
+PROJECT: WorkTrace — Employee Productivity & Computer Monitoring SaaS
+
+🎯 PRIMARY OBJECTIVE:
+Develop an Enterprise-Grade, Multi-Tenant SaaS platform enabling 
+organizations in Bangladesh to:
+- Monitor employee computer activity in real-time
+- Measure productivity via automated scoring & analytics
+- Generate actionable HR reports (PDF/Excel/CSV export)
+- Manage subscriptions & billing via local payment gateways
+
+🏗️ DEVELOPMENT SCOPE (Phase 1 MVP):
+1. Backend: Laravel 12 multi-tenant API with auth (JWT + 2FA), RBAC, 
+   business logic layer
+2. Frontend: React admin dashboard with real-time updates (WebSocket), 
+   reports, device management
+3. Desktop Agent: C# .NET Windows service for activity tracking (apps, 
+   websites, idle time, screenshots)
+4. Infrastructure: Docker Compose local dev environment (PostgreSQL, 
+   Redis, MinIO, Nginx)
+5. Billing: SSLCommerz, bKash, Nagad payment integration with BDT pricing
+
+📋 CRITICAL WORKFLOW RULES:
+- AI-ASSISTED DEVELOPMENT ONLY: Every code change follows strict 
+  step-by-step process
+- EXPLAIN FIRST: Before coding, AI explains in Bangla: what will be built, 
+  why, how, which files affected
+- ONE STEP AT A TIME: Code only for the specified step — never combine 
+  multiple steps
+- WAIT FOR APPROVAL: After step completion, AI STOPS and waits for 
+  "OK" confirmation before proceeding
+- NO STEP MERGING: Steps cannot be skipped, reordered, or merged without 
+  explicit notice
+
+✅ CODE QUALITY STANDARDS:
+- ZERO Errors & Warnings: All code must pass static analysis 
+  (PHPStan, ESLint, Prettier)
+- 100% DYNAMIC: No hardcoding — all configuration via .env, config files, 
+  or database
+- BANGLA COMMENTS: Every significant logic block must include Bangla 
+  explanation
+- FULL TESTING: Unit tests + feature tests required before step completion
+- DOCKER-FIRST: All development & testing via docker-compose (no local 
+  PHP/Node install)
+
+🔐 SPECIAL REQUIREMENTS:
+- Multi-tenant data isolation (tenant_id scoping)
+- Bangladesh-specific: Local currency (BDT), local payment gateways, 
+  Bengali UI language option
+- Consent & transparency: Policy acknowledgement, employee self-view, 
+  audit logs
+- Offline-first agent: Local SQLite cache + automatic batch sync
+
+📚 REFERENCE DOCUMENTS:
+- SRS Document: Full requirements, architecture, roadmap
+- Development Rules & Guidelines: Folder structure, code standards, 
+  workflow, testing, Docker setup
