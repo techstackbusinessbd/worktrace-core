@@ -34,4 +34,7 @@ RUN composer install --no-interaction --no-dev --prefer-dist --optimize-autoload
 # Give permissions to www-data for storage and cache
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
+# Create storage symlink
+RUN php artisan storage:link
+
 CMD ["apache2-foreground"]

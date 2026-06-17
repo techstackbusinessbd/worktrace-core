@@ -13,8 +13,10 @@
     "axios": "^1.17.0",
     "lucide-react": "^1.18.0",
     "react": "^19.2.6",
+    "react-data-table-component": "^8.4.0",
     "react-dom": "^19.2.6",
     "react-router-dom": "^7.17.0",
+    "styled-components": "^6.4.2",
     "zustand": "^5.0.14"
   },
   "devDependencies": {

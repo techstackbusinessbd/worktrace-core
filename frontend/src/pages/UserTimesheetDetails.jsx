@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import { ArrowLeft, Clock, Activity, Monitor, Calendar } from 'lucide-react';
+import DataTable from 'react-data-table-component';
 
 const formatDuration = (totalSeconds) => {
   if (!totalSeconds) return '0h 0m';
@@ -14,6 +15,91 @@ const formatTime = (dateString) => {
   const date = new Date(dateString);
   return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 };
+
+const customStyles = {
+  header: {
+    style: {
+      backgroundColor: 'transparent',
+    },
+  },
+  headRow: {
+    style: {
+      backgroundColor: 'var(--md-sys-color-surface-variant)',
+      borderBottomColor: 'var(--md-sys-color-outline-variant)',
+    },
+  },
+  headCells: {
+    style: {
+      fontWeight: '600',
+      fontSize: '14px',
+      color: 'var(--md-sys-color-on-surface)',
+    },
+  },
+  rows: {
+    style: {
+      backgroundColor: 'transparent',
+      borderBottomColor: 'var(--md-sys-color-outline-variant)',
+      fontSize: '14px',
+      '&:hover': {
+        backgroundColor: 'var(--md-sys-color-surface-variant)',
+      },
+    },
+  },
+  pagination: {
+    style: {
+      backgroundColor: 'transparent',
+      borderTopColor: 'var(--md-sys-color-outline-variant)',
+      color: 'var(--md-sys-color-on-surface)',
+    },
+  },
+};
+
+const columns = [
+  {
+    name: 'Time',
+    selector: row => `${formatTime(row.start_time)} - ${formatTime(row.end_time)}`,
+    sortable: true,
+  },
+  {
+    name: 'Application',
+    selector: row => row.application_name,
+    sortable: true,
+  },
+  {
+    name: 'Window Title',
+    selector: row => row.window_title,
+    sortable: true,
+    cell: row => (
+      <div title={row.window_title} style={{ maxWidth: '300px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+        {row.window_title}
+      </div>
+    )
+  },
+  {
+    name: 'Keystrokes',
+    selector: row => row.keyboard_strokes,
+    sortable: true,
+  },
+  {
+    name: 'Mouse Clicks',
+    selector: row => row.mouse_clicks,
+    sortable: true,
+  },
+  {
+    name: 'Status',
+    selector: row => row.is_idle ? 'Idle' : 'Active',
+    sortable: true,
+    cell: row => (
+      <span style={{ 
+        padding: '4px 8px', borderRadius: '4px', fontSize: '12px', fontWeight: '600',
+        color: row.is_idle ? '#9a3412' : '#166534', 
+        background: row.is_idle ? '#ffedd5' : '#dcfce7' 
+      }}>
+        {row.is_idle ? 'Idle' : 'Active'}
+      </span>
+    )
+  },
+];
 
 const UserTimesheetDetails = () => {
   const { id } = useParams();
@@ -161,42 +247,14 @@ const UserTimesheetDetails = () => {
             </div>
           ) : (
             <div className="glass-panel" style={{ overflow: 'hidden' }}>
-              <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '14px' }}>
-                <thead>
-                  <tr style={{ borderBottom: '1px solid var(--md-sys-color-outline-variant)', background: 'var(--md-sys-color-surface-variant)' }}>
-                    <th style={{ padding: '12px 16px', fontWeight: '600' }}>Time</th>
-                    <th style={{ padding: '12px 16px', fontWeight: '600' }}>Application</th>
-                    <th style={{ padding: '12px 16px', fontWeight: '600' }}>Window Title</th>
-                    <th style={{ padding: '12px 16px', fontWeight: '600' }}>Keystrokes</th>
-                    <th style={{ padding: '12px 16px', fontWeight: '600' }}>Mouse Clicks</th>
-                    <th style={{ padding: '12px 16px', fontWeight: '600' }}>Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {details.activities.map((act) => (
-                    <tr key={act.id} style={{ borderBottom: '1px solid var(--md-sys-color-outline-variant)' }}>
-                      <td style={{ padding: '12px 16px', whiteSpace: 'nowrap' }}>
-                        {formatTime(act.start_time)} - {formatTime(act.end_time)}
-                      </td>
-                      <td style={{ padding: '12px 16px', fontWeight: '600' }}>{act.application_name}</td>
-                      <td style={{ padding: '12px 16px', color: 'var(--md-sys-color-on-surface-variant)', maxWidth: '300px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} title={act.window_title}>
-                        {act.window_title}
-                      </td>
-                      <td style={{ padding: '12px 16px' }}>{act.keyboard_strokes}</td>
-                      <td style={{ padding: '12px 16px' }}>{act.mouse_clicks}</td>
-                      <td style={{ padding: '12px 16px' }}>
-                        <span style={{ 
-                          padding: '4px 8px', borderRadius: '4px', fontSize: '12px', fontWeight: '600',
-                          color: act.is_idle ? '#9a3412' : '#166534', 
-                          background: act.is_idle ? '#ffedd5' : '#dcfce7' 
-                        }}>
-                          {act.is_idle ? 'Idle' : 'Active'}
-                        </span>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+              <DataTable
+                columns={columns}
+                data={details.activities}
+                pagination
+                customStyles={customStyles}
+                highlightOnHover
+                responsive
+              />
             </div>
           )}
         </div>
