@@ -56,9 +56,11 @@ const customStyles = {
 
 const columns = [
   {
+    id: 'time-col',
     name: 'Time',
     selector: row => `${formatTime(row.start_time)} - ${formatTime(row.end_time)}`,
     sortable: true,
+    sortFunction: (rowA, rowB) => new Date(rowA.start_time).getTime() - new Date(rowB.start_time).getTime(),
   },
   {
     name: 'Application',
@@ -254,6 +256,8 @@ const UserTimesheetDetails = () => {
                 customStyles={customStyles}
                 highlightOnHover
                 responsive
+                defaultSortFieldId="time-col"
+                defaultSortAsc={false}
               />
             </div>
           )}
