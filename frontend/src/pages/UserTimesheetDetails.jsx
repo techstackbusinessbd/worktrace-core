@@ -103,6 +103,37 @@ const columns = [
   },
 ];
 
+const screenshotColumns = (setSelectedImage) => [
+  {
+    name: 'Time',
+    selector: row => formatTime(row.captured_at),
+    sortable: true,
+    width: '200px',
+  },
+  {
+    name: 'Screenshot Thumbnail',
+    cell: row => (
+      <div style={{ padding: '8px 0' }}>
+        <img 
+          src={row.s3_path} 
+          alt="Screenshot" 
+          style={{ width: '160px', height: '100px', objectFit: 'cover', borderRadius: '6px', cursor: 'pointer', transition: 'opacity 0.2s', border: '1px solid var(--md-sys-color-outline-variant)' }}
+          onClick={() => setSelectedImage(row.s3_path)}
+          onMouseOver={(e) => e.target.style.opacity = 0.8}
+          onMouseOut={(e) => e.target.style.opacity = 1}
+          onError={(e) => {
+            e.target.style.display = 'none';
+            e.target.nextSibling.style.display = 'flex';
+          }}
+        />
+        <div style={{ display: 'none', width: '160px', height: '100px', alignItems: 'center', justifyContent: 'center', color: '#666', background: '#111', fontSize: '12px', borderRadius: '6px' }}>
+          Unavailable
+        </div>
+      </div>
+    ),
+  }
+];
+
 const UserTimesheetDetails = () => {
   const { id } = useParams();
   const [searchParams] = useSearchParams();
@@ -260,32 +291,15 @@ const UserTimesheetDetails = () => {
               No screenshots captured on this day.
             </div>
           ) : (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '20px' }}>
-              {details.screenshots.map((shot) => (
-                <div key={shot.id} className="glass-panel" style={{ overflow: 'hidden', padding: '12px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                  {/* Since S3 upload might be mocked or not fully configured, handle broken images gracefully */}
-                  <div style={{ width: '100%', height: '180px', background: '#000', borderRadius: '8px', overflow: 'hidden', position: 'relative' }}>
-                    <img 
-                      src={shot.s3_path} 
-                      alt="Screenshot" 
-                      style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.8, cursor: 'pointer', transition: 'opacity 0.2s' }}
-                      onClick={() => setSelectedImage(shot.s3_path)}
-                      onMouseOver={(e) => e.target.style.opacity = 1}
-                      onMouseOut={(e) => e.target.style.opacity = 0.8}
-                      onError={(e) => {
-                        e.target.style.display = 'none';
-                        e.target.nextSibling.style.display = 'flex';
-                      }}
-                    />
-                    <div style={{ display: 'none', position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, alignItems: 'center', justifyContent: 'center', color: '#666', background: '#111', fontSize: '13px' }}>
-                      Image unavailable
-                    </div>
-                  </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span style={{ fontWeight: '600', fontSize: '14px' }}>{formatTime(shot.captured_at)}</span>
-                  </div>
-                </div>
-              ))}
+            <div className="glass-panel" style={{ overflow: 'hidden' }}>
+              <DataTable
+                columns={screenshotColumns(setSelectedImage)}
+                data={details.screenshots}
+                pagination
+                customStyles={customStyles}
+                highlightOnHover
+                responsive
+              />
             </div>
           )}
         </div>
