@@ -55,6 +55,8 @@ namespace WorkTrace.Agent.Services
             _activityTimer = new Timer(OnActivityTick, null, 0, _activityIntervalMs);
             _screenshotTimer = new Timer(OnScreenshotTick, null, 0, _screenshotIntervalMs);
             _uploadTimer = new Timer(OnUploadTick, null, _uploadIntervalMs, _uploadIntervalMs);
+
+            InputTracker.Start();
         }
 
         public void Stop()
@@ -65,6 +67,8 @@ namespace WorkTrace.Agent.Services
             
             // Force flush before exit
             OnUploadTick(null);
+            
+            InputTracker.Stop();
             
             File.AppendAllText("agent.log", $"[{DateTime.Now}] WorkTrace Agent stopped.\n");
         }
@@ -83,8 +87,8 @@ namespace WorkTrace.Agent.Services
                 window_title = windowTitle,
                 application_name = appName,
                 is_idle = isIdle,
-                keyboard_strokes = 0, // Not implemented in V1 due to AV risks
-                mouse_clicks = 0      // Not implemented in V1 due to AV risks
+                keyboard_strokes = InputTracker.GetAndResetKeyCount(),
+                mouse_clicks = InputTracker.GetAndResetMouseCount()
             };
 
             lock (_bufferLock)
