@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
 import api from '../services/api';
-import { ArrowLeft, Clock, Activity, Monitor, Calendar } from 'lucide-react';
+import { ArrowLeft, Clock, Activity, Monitor, Calendar, X } from 'lucide-react';
 import DataTable from 'react-data-table-component';
 
 const formatDuration = (totalSeconds) => {
@@ -112,6 +112,7 @@ const UserTimesheetDetails = () => {
   const [details, setDetails] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedImage, setSelectedImage] = useState(null);
 
   useEffect(() => {
     const fetchDetails = async () => {
@@ -149,9 +150,59 @@ const UserTimesheetDetails = () => {
     : 0;
 
   return (
-    <div style={{ padding: '32px', maxWidth: '1400px', margin: '0 auto', width: '100%', boxSizing: 'border-box' }}>
-      
-      {/* Header */}
+    <>
+      {/* Full Screen Image Modal */}
+      {selectedImage && (
+        <div 
+          style={{
+            position: 'fixed',
+            top: 0, left: 0, right: 0, bottom: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.85)',
+            zIndex: 9999,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backdropFilter: 'blur(4px)'
+          }}
+          onClick={() => setSelectedImage(null)}
+        >
+          <div style={{ position: 'relative', maxWidth: '90vw', maxHeight: '90vh' }}>
+            <button 
+              onClick={(e) => {
+                e.stopPropagation();
+                setSelectedImage(null);
+              }}
+              style={{
+                position: 'absolute',
+                top: '-40px', right: 0,
+                background: 'transparent',
+                border: 'none',
+                color: '#fff',
+                cursor: 'pointer',
+                padding: '8px'
+              }}
+            >
+              <X size={24} />
+            </button>
+            <img 
+              src={selectedImage} 
+              alt="Screenshot Full Screen" 
+              style={{ 
+                maxWidth: '100%', 
+                maxHeight: '90vh', 
+                objectFit: 'contain',
+                borderRadius: '8px',
+                boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.5)'
+              }} 
+              onClick={(e) => e.stopPropagation()}
+            />
+          </div>
+        </div>
+      )}
+
+      <div style={{ padding: '32px', maxWidth: '1400px', margin: '0 auto', width: '100%', boxSizing: 'border-box' }}>
+        
+        {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '24px' }}>
         <button 
           onClick={() => navigate('/dashboard/timesheets')}
@@ -217,7 +268,10 @@ const UserTimesheetDetails = () => {
                     <img 
                       src={shot.s3_path} 
                       alt="Screenshot" 
-                      style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.8 }}
+                      style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.8, cursor: 'pointer', transition: 'opacity 0.2s' }}
+                      onClick={() => setSelectedImage(shot.s3_path)}
+                      onMouseOver={(e) => e.target.style.opacity = 1}
+                      onMouseOut={(e) => e.target.style.opacity = 0.8}
                       onError={(e) => {
                         e.target.style.display = 'none';
                         e.target.nextSibling.style.display = 'flex';
@@ -265,6 +319,7 @@ const UserTimesheetDetails = () => {
         
       </div>
     </div>
+    </>
   );
 };
 
