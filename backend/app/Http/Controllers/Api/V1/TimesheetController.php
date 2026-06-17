@@ -96,13 +96,13 @@ class TimesheetController extends Controller
         $activities = Activity::where('user_id', $employee->id)
             ->where('tenant_id', $tenantId)
             ->whereBetween('start_time', [$startOfDay, $endOfDay])
-            ->orderBy('start_time', 'asc')
+            ->orderBy('start_time', 'desc')
             ->get();
 
         $screenshots = Screenshot::where('user_id', $employee->id)
             ->where('tenant_id', $tenantId)
             ->whereBetween('captured_at', [$startOfDay, $endOfDay])
-            ->orderBy('captured_at', 'asc')
+            ->orderBy('captured_at', 'desc')
             ->get();
 
         // Calculate totals for convenience
